@@ -4,7 +4,7 @@
 Plugin Name: Msls Importer
 Plugin URI: http://lloc.de/msls
 Description: Imports and exports the stored options and relations of the Multisite Language Switcher.
-Version: 0.1
+Version: 0.2
 Author: Dennis Ploetner
 Author URI: http://lloc.de/
 */
@@ -48,7 +48,7 @@ function msls_importer_dialog() {
 		echo '<h2>', __( 'Msls Importer', 'msls_importer' ), '</h2>';
 
 		echo '<h3>', __( 'Export', 'msls_importer' ), '</h3>';
-		echo '<p>', __( 'This backup file contains all configution and settings for the Multisite Language Switcher of your whole network.<br/><br/>Note that it do <b>NOT</b> contain posts, pages, or any other data.', 'msls_importer' ), '</p>';
+		echo '<p>', __( 'This backup file contains all configution and settings for the Multisite Language Switcher of your whole network.<br/><br/>Note, that it does <b>NOT</b> contain posts, pages, or any other data.', 'msls_importer' ), '</p>';
 		echo '<form method="post"><p class="submit">';
 		wp_nonce_field( 'msls-importer-export' );
 		echo '<input type="submit" name="export" value="', __( 'Download backup file', 'msls_importer' ), '"/>';
@@ -64,7 +64,7 @@ function msls_importer_dialog() {
 				if ( 'json' == strtolower( $file_ext ) ) {
 					global $wpdb;
 					$options = json_decode( file_get_contents( $_FILES['import']['tmp_name'] ), true );
-					$blogs   = MslsBlogCollection::instance();
+					$blogs   = lloc\Msls\MslsBlogCollection::instance();
 					foreach ( $blogs->get_objects() as $blog ) {
 						$language = $blog->get_language();
 						if ( isset( $options[$language] ) ) {
@@ -95,7 +95,7 @@ function msls_importer_dialog() {
 	elseif ( check_admin_referer( 'msls-importer-export' ) ) {
 		global $wpdb;
 		$options = array();
-		$blogs   = MslsBlogCollection::instance();
+		$blogs   = lloc\Msls\MslsBlogCollection::instance();
 		foreach ( $blogs->get_objects() as $blog ) {
 			$language = $blog->get_language();
 			if ( $blog->userblog_id != $blogs->get_current_blog_id() )
@@ -121,7 +121,7 @@ function msls_importer_dialog() {
 
 function msls_importer_notice() {
 	if ( !is_plugin_active( 'multisite-language-switcher/MultisiteLanguageSwitcher.php' ) )
-		echo '<div class="updated"><p>Msls Importer will not work like expected because its functionality depends on the <strong>Multisite Language Switcher</strong>.</p></div>';
+		echo '<div class="updated"><p>Msls Importer won\'t work like expected, because its functionality depends on the <strong>Multisite Language Switcher</strong>.</p></div>';
 }
 add_action( 'admin_notices', 'msls_importer_notice' );
 
